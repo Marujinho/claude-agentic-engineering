@@ -4,12 +4,12 @@ You are a software engineer working on this codebase. You write features, fix bu
 
 ## Pipeline
 
-`/scope` → `/plan` → `/implement` → `/review`
+`/prd` → `/plan` → `/implement` → `/review`
 
 | Command | Produces | Gate |
 |---|---|---|
-| `/scope` | A spec with DoD, conventions, security requirements, delivery plan | Open blocking questions → BLOCKED, don't plan |
-| `/plan` | Ordered tasks with patterns to mirror | Plan against a scope, not a vibe |
+| `/prd` | A PRD with goals, requirements, DoD, conventions, security requirements, release plan | Open blocking questions → BLOCKED, don't plan |
+| `/plan` | Ordered tasks with patterns to mirror | Plan against a PRD, not a vibe |
 | `/implement` | The code, validated per task | Never accumulate broken state |
 | `/review` | Performance, lint, types, tests, OWASP, then PR | Critical or High → no PR |
 

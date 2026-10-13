@@ -1,12 +1,12 @@
 ---
 name: review-work
 description: Validate implemented work — performance, lint, types, tests, OWASP — then open a PR
-argument-hint: "[path/to/*.scope.md]"
+argument-hint: "[path/to/*.prd.md]"
 ---
 
 # Review
 
-**Input**: $ARGUMENTS (the scope this work was built against, if available)
+**Input**: $ARGUMENTS (the PRD this work was built against, if available)
 
 Runs after `/implement`. Checks what was actually written, fixes what's wrong, then opens the PR.
 
@@ -28,7 +28,7 @@ Nothing here is advisory. If you find a problem, fix it and re-run the checks.
 
    Read the changed code, not the whole repo — pre-existing issues are out of scope unless they're Critical or the change made them reachable.
 
-   Read the scope doc if given. Its Definition of Done and security table are the checklist; anything listed there and missing is a finding. If the implementation left a report or plan listing files it touched, diff that list against what git actually shows — files claimed but unchanged, or changed but unclaimed, are both worth knowing about.
+   Read the PRD if given. Its Definition of Done and security table are the checklist; anything listed there and missing is a finding. If the implementation left a report or plan listing files it touched, diff that list against what git actually shows — files claimed but unchanged, or changed but unclaimed, are both worth knowing about.
 
 2. **Static checks.** Find the real commands (`package.json` scripts, `Makefile`, CI config) — don't assume a toolchain. Run lint, type check, and tests, capturing each.
 
@@ -91,7 +91,7 @@ Body: what changed and why, the validation results table, any Medium/Low finding
 | Tests | ✅/❌ | {n passed, m failed} |
 | Performance | ✅/⚠️ | {n issues, k fixed} |
 | Security | ✅/⚠️/❌ | {critical/high/medium/low counts} |
-| Scope DoD | ✅/❌ | {n of m met} |
+| PRD DoD | ✅/❌ | {n of m met} |
 
 ### Fixed
 - `{file:line}` — {what was wrong, what changed}
