@@ -39,7 +39,7 @@ Read-only until the plan is approved. The plan file is the only thing you write 
 
 6. **Hand off.** Per CLAUDE.md § Execution boundaries:
    - **Default (`assist`)** — present the plan: approach, task list, decisions, risks, and the file path. Then wait. Requested changes go into the plan file and it's presented again. On an explicit yes, set `Approval` to the date and invoke `/implement-work` with the plan.
-   - **`--auto` flag or `autonomy: auto`** — set `Approval` to `skipped (--auto)` and invoke `/implement-work --auto` immediately.
+   - **`--auto` flag or `autonomy: auto`** — set `Approval` to `skipped (--auto)` and invoke `/implement-work` immediately.
    - **`suggest`** — write the plan and stop.
 
 ## Output
