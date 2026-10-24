@@ -6,9 +6,9 @@ argument-hint: "<prd: path | url | text> [--auto]"
 
 # Plan
 
-**Input**: $ARGUMENTS (the PRD — a path, a URL, or already in the conversation, resolved per CLAUDE.md § Inputs. `--auto` skips the human approval of the plan and goes straight to `/implement`)
+**Input**: $ARGUMENTS (the PRD — a path, a URL, or already in the conversation, resolved per CLAUDE.md § Inputs. `--auto` skips the human approval of the plan and goes straight to `/implement-work`)
 
-Runs after `/create-prd`, before `/implement`. Answers *how*: which files change, in what order, mirroring which existing code. The PRD already settled *what* and *why* — don't re-litigate it. If it's wrong, say so and stop.
+Runs after `/create-prd`, before `/implement-work`. Answers *how*: which files change, in what order, mirroring which existing code. The PRD already settled *what* and *why* — don't re-litigate it. If it's wrong, say so and stop.
 
 Mirrors Claude Code's own plan mode — explore, design, verify, write — but the plan is a pipeline artifact and the approval gate is ours, so it works with `--auto` and in CI, where plan mode can't be approved.
 
@@ -38,8 +38,8 @@ Read-only until the plan is approved. The plan file is the only thing you write 
 5. **Write the plan** in the `artifacts` directory (CLAUDE.md § Artifacts), same stem as the PRD: `user-invite-flow-prd.md` → `user-invite-flow-plan.md`. Ordered tasks, each small enough to validate on its own and leave the tree green. Each names its files, the code it mirrors with `file:line`, its tests, and how to check it. Order: contracts and migrations first, then data layer → logic → interface → wiring, and whatever needs a flag last.
 
 6. **Hand off.** Per CLAUDE.md § Execution boundaries:
-   - **Default (`assist`)** — present the plan: approach, task list, decisions, risks, and the file path. Then wait. Requested changes go into the plan file and it's presented again. On an explicit yes, set `Approval` to the date and invoke `/implement` with the plan.
-   - **`--auto` flag or `autonomy: auto`** — set `Approval` to `skipped (--auto)` and invoke `/implement --auto` immediately.
+   - **Default (`assist`)** — present the plan: approach, task list, decisions, risks, and the file path. Then wait. Requested changes go into the plan file and it's presented again. On an explicit yes, set `Approval` to the date and invoke `/implement-work` with the plan.
+   - **`--auto` flag or `autonomy: auto`** — set `Approval` to `skipped (--auto)` and invoke `/implement-work --auto` immediately.
    - **`suggest`** — write the plan and stop.
 
 ## Output

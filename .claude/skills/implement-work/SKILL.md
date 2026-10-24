@@ -1,5 +1,5 @@
 ---
-name: implement
+name: implement-work
 description: Execute an approved plan task by task — mirror the named patterns, test each task, never leave the tree broken
 argument-hint: "<plan: path | url | text> [--auto]"
 ---
@@ -32,7 +32,7 @@ Runs after `/create-plan`. Executes the accepted plan — nothing it didn't say.
 
 5. **Finish.** Every task done → run the plan's Verification section end to end. Then the PRD's Definition of Done, item by item. Anything unmet is reported unmet, not rounded up.
 
-6. **Hand off.** Append the Implementation section below to the plan file. Then invoke `/review-work` with the PRD, passing `--auto` through if it was given. Under `autonomy: suggest`, `/implement` doesn't run at all — say the plan is ready and stop.
+6. **Hand off.** Append the Implementation section below to the plan file. Then invoke `/review-work` with the PRD, passing `--auto` through if it was given. Under `autonomy: suggest`, `/implement-work` doesn't run at all — say the plan is ready and stop.
 
 ## Output
 

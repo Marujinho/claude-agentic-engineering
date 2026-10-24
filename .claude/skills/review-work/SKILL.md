@@ -8,7 +8,7 @@ argument-hint: "[prd: path | url | text] [--standard <name | url | path>]..."
 
 **Input**: $ARGUMENTS (the PRD this work was built against, if available — a path, a URL, or already in the conversation; resolve it per CLAUDE.md § Inputs. `--standard` adds a security or compliance standard to the default, repeatable — CLAUDE.md § Standards)
 
-Runs after `/implement`. Checks what was actually written, fixes what's wrong, then opens the PR.
+Runs after `/implement-work`. Checks what was actually written, fixes what's wrong, then opens the PR.
 
 Nothing here is advisory. If you find a problem, fix it and re-run the checks.
 

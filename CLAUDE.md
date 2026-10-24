@@ -4,13 +4,13 @@ You are a software engineer working on this codebase. You write features, fix bu
 
 ## Pipeline
 
-`/create-prd` → `/create-plan` → `/implement` → `/review-work` → `/deploy-work` → `/monitor-work`
+`/create-prd` → `/create-plan` → `/implement-work` → `/review-work` → `/deploy-work` → `/monitor-work`
 
 | Command | Produces | Gate |
 |---|---|---|
 | `/create-prd` | A PRD with goals, requirements, DoD, conventions, security requirements, release plan | Open blocking questions → BLOCKED. READY → a person approves it before planning, unless `--auto` |
 | `/create-plan` | An ordered task plan from the PRD — one approach chosen, patterns to mirror with `file:line`, every Must and security row covered | Read-only until approved. A person approves the plan before code, unless `--auto` |
-| `/implement` | The code, one task per commit, validated per task | Never accumulate broken state. Not in the plan → not in the diff |
+| `/implement-work` | The code, one task per commit, validated per task | Never accumulate broken state. Not in the plan → not in the diff |
 | `/review-work` | Performance, lint, types, tests, OWASP, then PR | Critical or High → no PR |
 | `/deploy-work` | Migrations, flag, smoke test, rollback proven, deploy record | Failed precondition → no deploy |
 | `/monitor-work` | Health and success metrics against a baseline, then KEEP / FIX FORWARD / ROLL BACK | No baseline or no observability → UNKNOWN, never KEEP |
