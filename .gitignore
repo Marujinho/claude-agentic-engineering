@@ -1,0 +1,6 @@
+# pipeline runtime state (see CLAUDE.md § Hooks)
+.claude/.stage
+.claude/STOP
+.claude/audit/
+.claude/settings.local.json
+__pycache__/

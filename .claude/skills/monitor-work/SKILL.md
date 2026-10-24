@@ -12,7 +12,7 @@ Runs after `/deploy-work`. Closes the loop: PRD §3 said what success looks like
 
 ## Process
 
-1. **Find the observability stack.** Read the repo for it — `sentry.*`, `datadog.*`, `newrelic.*`, OpenTelemetry setup, the flag SDK init, the analytics client, whatever logs go to. Don't assume a vendor.
+1. **Find the observability stack.** Mark the stage first: `printf monitor-work > .claude/.stage` (CLAUDE.md § Hooks). Read the repo for it — `sentry.*`, `datadog.*`, `newrelic.*`, OpenTelemetry setup, the flag SDK init, the analytics client, whatever logs go to. Don't assume a vendor.
 
    If there isn't one — no error tracking, no metrics, no structured logs — stop and say so. Health can't be judged from vibes. Tell the user what's missing, propose the smallest thing that would give a signal (an error tracker and request latency on the touched endpoints is usually enough), and open it as a task. The decision for this run is UNKNOWN, not KEEP.
 
@@ -43,7 +43,7 @@ Runs after `/deploy-work`. Closes the loop: PRD §3 said what success looks like
 
    A decision that isn't KEEP gets reported the moment it's reached, not at the end of the window.
 
-7. **Write the record** in the `artifacts` directory (CLAUDE.md § Artifacts), same stem as the deploy record: `user-invite-flow-deploy.md` → `user-invite-flow-monitor.md`. If §3 rows are still pending, note the next check date; re-run this skill then and append to the same file.
+7. **Write the record** — Clear the stage marker first: `rm -f .claude/.stage`. Then write it in the `artifacts` directory (CLAUDE.md § Artifacts), same stem as the deploy record: `user-invite-flow-deploy.md` → `user-invite-flow-monitor.md`. If §3 rows are still pending, note the next check date; re-run this skill then and append to the same file.
 
 ## Output
 

@@ -14,7 +14,7 @@ Nothing here is advisory. A precondition that fails stops the deploy; the output
 
 ## Process
 
-1. **Confirm what ships.**
+1. **Confirm what ships.** Mark the stage first: `printf deploy-work > .claude/.stage` (CLAUDE.md § Hooks).
 
    ```bash
    git fetch --all --tags
@@ -55,7 +55,7 @@ Nothing here is advisory. A precondition that fails stops the deploy; the output
 
 6. **Prove the rollback — before the flag goes on.** Actually roll back once (previous image / tag, or flag off) and confirm the app responds. Then roll forward. A rollback that has never been run is a hypothesis.
 
-7. **Tag and record.**
+7. **Tag and record.** Clear the stage marker first: `rm -f .claude/.stage`.
 
    ```bash
    git tag -a {env}-{YYYY-MM-DD}-{short-sha} -m "{what shipped}"

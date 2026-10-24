@@ -14,7 +14,7 @@ Runs before `/create-plan`.
 
 ## Process
 
-1. **Resolve and read the task.** Follow CLAUDE.md § Inputs; if you can't open it, say so and stop. Separate what it states from what it assumes. Identify the problem, the user, and the outcome the requester actually wants — not just the feature they named.
+1. **Resolve and read the task.** Mark the stage first: `printf create-prd > .claude/.stage` (CLAUDE.md § Hooks). Then follow CLAUDE.md § Inputs; if you can't open it, say so and stop. Separate what it states from what it assumes. Identify the problem, the user, and the outcome the requester actually wants — not just the feature they named.
 
 2. **Look at the codebase.** `ls`, `git log --oneline -10`, `CLAUDE.md` / `README.md`, plus the closest existing feature to the one being asked for. Pull out: stack and versions, where this kind of code lives, naming conventions, error handling, test patterns — each with a `file:line` source.
 
@@ -38,7 +38,7 @@ Runs before `/create-plan`.
 
 7. **Write the PRD** in the `artifacts` directory (CLAUDE.md § Pipeline settings), named for the feature itself in kebab-case — `user-invite-flow-prd.md`, not `task-prd.md` or `notes-final-v2-prd.md`. The name should tell someone what's inside without opening it.
 
-8. **Hand off.** What happens next depends on the status and the gate in CLAUDE.md § Execution boundaries:
+8. **Hand off.** Clear the stage marker first: `rm -f .claude/.stage`. What happens next depends on the status and the gate in CLAUDE.md § Execution boundaries:
    - **BLOCKED** — stop. List the open questions. Nothing else runs.
    - **READY, default (`assist`)** — present the PRD for approval: the goals, the Must requirements, the assumptions, the risks, and the file path. Then wait. Requested edits go into the file and it's presented again. On an explicit yes, set `Approval` in the header to the date and invoke `/create-plan` with the PRD.
    - **READY, `--auto` flag or `autonomy: auto`** — set `Approval` to `skipped (--auto)` and invoke `/create-plan --auto` immediately. The plan has its own gate.

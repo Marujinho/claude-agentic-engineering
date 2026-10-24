@@ -16,7 +16,7 @@ Read-only until the plan is approved. The plan file is the only thing you write 
 
 ## Process
 
-1. **Resolve the PRD.** Per CLAUDE.md § Inputs. Status BLOCKED, or `Approval: pending` without `--auto` → stop; the PRD isn't ready. Read all of it — §7, §8, §11, §12, §17 and §19 are this plan's inputs.
+1. **Resolve the PRD.** Mark the stage first: `printf create-plan > .claude/.stage` (CLAUDE.md § Hooks). Then per CLAUDE.md § Inputs. Status BLOCKED, or `Approval: pending` without `--auto` → stop; the PRD isn't ready. Read all of it — §7, §8, §11, §12, §17 and §19 are this plan's inputs.
 
 2. **Understand.** Read the code PRD §11 names, what it imports, what imports it, and the closest existing feature. Trace the path a request will take through the new code. Know the test setup — runner, fixtures, how the closest feature is tested.
 
@@ -37,7 +37,7 @@ Read-only until the plan is approved. The plan file is the only thing you write 
 
 5. **Write the plan** in the `artifacts` directory (CLAUDE.md § Artifacts), same stem as the PRD: `user-invite-flow-prd.md` → `user-invite-flow-plan.md`. Ordered tasks, each small enough to validate on its own and leave the tree green. Each names its files, the code it mirrors with `file:line`, its tests, and how to check it. Order: contracts and migrations first, then data layer → logic → interface → wiring, and whatever needs a flag last.
 
-6. **Hand off.** Per CLAUDE.md § Execution boundaries:
+6. **Hand off.** Clear the stage marker first: `rm -f .claude/.stage`. Then per CLAUDE.md § Execution boundaries:
    - **Default (`assist`)** — present the plan: approach, task list, decisions, risks, and the file path. Then wait. Requested changes go into the plan file and it's presented again. On an explicit yes, set `Approval` to the date and invoke `/implement-work` with the plan.
    - **`--auto` flag or `autonomy: auto`** — set `Approval` to `skipped (--auto)` and invoke `/implement-work` immediately.
    - **`suggest`** — write the plan and stop.

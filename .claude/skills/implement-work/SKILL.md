@@ -12,7 +12,7 @@ Runs after `/create-plan`. Executes the accepted plan — nothing it didn't say.
 
 ## Process
 
-1. **Resolve the plan.** Per CLAUDE.md § Inputs. `Approval: pending` → stop; nobody accepted it. Approval happens in `/create-plan`, not here. Read the plan and the PRD it points to. Find the real commands — lint, types, tests — in `package.json` scripts, `Makefile`, CI config. Don't assume a toolchain.
+1. **Resolve the plan.** Mark the stage first: `printf implement-work > .claude/.stage` (CLAUDE.md § Hooks). Then per CLAUDE.md § Inputs. `Approval: pending` → stop; nobody accepted it. Approval happens in `/create-plan`, not here. Read the plan and the PRD it points to. Find the real commands — lint, types, tests — in `package.json` scripts, `Makefile`, CI config. Don't assume a toolchain.
 
 2. **Baseline.** Run the test suite once before touching anything and record what's already red. An inherited failure isn't yours to fix here, but you need to know it exists — otherwise every later red looks like yours.
 
@@ -32,7 +32,7 @@ Runs after `/create-plan`. Executes the accepted plan — nothing it didn't say.
 
 5. **Finish.** Every task done → run the plan's Verification section end to end. Then the PRD's Definition of Done, item by item. Anything unmet is reported unmet, not rounded up.
 
-6. **Hand off.** Append the Implementation section below to the plan file. Then invoke `/review-work` with the PRD. Under `autonomy: suggest`, `/implement-work` doesn't run at all — say the plan is ready and stop.
+6. **Hand off.** Append the Implementation section below to the plan file. Clear the stage marker first: `rm -f .claude/.stage`. Then invoke `/review-work` with the PRD. Under `autonomy: suggest`, `/implement-work` doesn't run at all — say the plan is ready and stop.
 
 ## Output
 

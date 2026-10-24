@@ -14,7 +14,7 @@ Nothing here is advisory. If you find a problem, fix it and re-run the checks.
 
 ## Process
 
-1. **Find what changed.** The agent may have committed, or left everything in the working tree, or both. Check all of it:
+1. **Find what changed.** Mark the stage first: `printf review-work > .claude/.stage` (CLAUDE.md § Hooks). The agent may have committed, or left everything in the working tree, or both. Check all of it:
 
    ```bash
    git status --porcelain          # uncommitted edits + untracked files
@@ -67,7 +67,7 @@ Nothing here is advisory. If you find a problem, fix it and re-run the checks.
 
    Loop until clean. Leave Medium and Low as findings if the fix is a design decision rather than a correction.
 
-6. **Open the PR** — only if everything above passes. See below. Under `autonomy: suggest` (CLAUDE.md § Execution boundaries) stop here and hand back the diff and the review instead.
+6. **Open the PR** — only if everything above passes. See below. Clear the stage marker first: `rm -f .claude/.stage`. Under `autonomy: suggest` (CLAUDE.md § Execution boundaries) stop here and hand back the diff and the review instead.
 
 ## PR
 
