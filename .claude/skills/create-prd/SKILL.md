@@ -1,20 +1,20 @@
 ---
-name: prd
-description: Turn a raw task file into a complete, implementation-ready PRD (Product Requirements Document)
-argument-hint: <path/to/task.md>
+name: create-prd
+description: Turn a task — file, URL, tracker item, or pasted text — into a complete, implementation-ready PRD (Product Requirements Document)
+argument-hint: "<task: path | url | tracker id | text> [--auto] [--standard <name | url | path>]..."
 ---
 
 # PRD
 
-**Input**: $ARGUMENTS (a task file, or a document already in the conversation)
+**Input**: $ARGUMENTS (the task — a path, a URL, a tracker item, pasted text, or a document already in the conversation; resolve it per CLAUDE.md § Inputs. `--auto` skips the human approval of the PRD and goes straight to planning. `--standard` adds a security or compliance standard to the default, repeatable — CLAUDE.md § Standards)
 
-Produce the Product Requirements Document an implementing agent builds against. It answers *what*, *why*, *for whom*, *how we know it worked*, and *under which rules* — not *how to build it*. That's `/plan`'s job.
+Produce the Product Requirements Document an implementing agent builds against. It answers *what*, *why*, *for whom*, *how we know it worked*, and *under which rules* — not *how to build it*. That's `/create-plan`'s job.
 
-Runs before `/plan`.
+Runs before `/create-plan`.
 
 ## Process
 
-1. **Read the task file.** Separate what it states from what it assumes. Identify the problem, the user, and the outcome the requester actually wants — not just the feature they named.
+1. **Resolve and read the task.** Follow CLAUDE.md § Inputs; if you can't open it, say so and stop. Separate what it states from what it assumes. Identify the problem, the user, and the outcome the requester actually wants — not just the feature they named.
 
 2. **Look at the codebase.** `ls`, `git log --oneline -10`, `CLAUDE.md` / `README.md`, plus the closest existing feature to the one being asked for. Pull out: stack and versions, where this kind of code lives, naming conventions, error handling, test patterns — each with a `file:line` source.
 
@@ -28,20 +28,28 @@ Runs before `/plan`.
 
 4. **Find the gaps.** Go through the PRD template below and mark each item known, inferred, or missing. Never ask about something the codebase already answers.
 
-5. **Run the security pass.** Walk all ten OWASP 2025 categories against what's being built — one at a time, no skipping. For each: does this feature touch it? If yes, what's the requirement? The output is a requirement the implementer must satisfy and a test that proves it, not a note saying "be careful with auth". Categories the feature genuinely doesn't touch get marked N/A with a reason.
+5. **Run the security and compliance pass.** Resolve every standard in scope — `standards` from CLAUDE.md § Pipeline settings plus each `--standard`, per § Standards. OWASP Top 10:2025 is in the template below; any other becomes a table of the same shape. Then walk every row of every standard against what's being built — one at a time, no skipping. For each: does this feature touch it? If yes, what's the requirement? The output is a requirement the implementer must satisfy and a test that proves it, not a note saying "be careful with auth". Rows the feature genuinely doesn't touch get N/A with a reason.
+
+   Privacy and sector standards (LGPD, GDPR, HIPAA, PCI) ask different questions than OWASP: what personal, health, or payment data this touches; the basis for processing it; where it's stored and for how long; who can read it; how a subject gets it deleted; what gets logged. Translate each control into something the implementer can build and a test can prove.
 
    Check the code around it too, not just the new code — a feature can be written correctly and still break an existing control by widening a query, reusing a permissive handler, or logging a field that wasn't logged before.
 
 6. **Ask, once.** Batch every question whose wrong answer means rework. Give 2–3 options with a recommendation. Everything else becomes a listed assumption — never a silent one.
 
-7. **Write the PRD** next to the task file, named for the feature itself in kebab-case — `user-invite-flow.prd.md`, not `task.prd.md` or `notes-final-v2.prd.md`. The name should tell someone what's inside without opening it.
+7. **Write the PRD** in the `artifacts` directory (CLAUDE.md § Pipeline settings), named for the feature itself in kebab-case — `user-invite-flow-prd.md`, not `task-prd.md` or `notes-final-v2-prd.md`. The name should tell someone what's inside without opening it.
+
+8. **Hand off.** What happens next depends on the status and the gate in CLAUDE.md § Execution boundaries:
+   - **BLOCKED** — stop. List the open questions. Nothing else runs.
+   - **READY, default (`assist`)** — present the PRD for approval: the goals, the Must requirements, the assumptions, the risks, and the file path. Then wait. Requested edits go into the file and it's presented again. On an explicit yes, set `Approval` in the header to the date and invoke `/create-plan` with the PRD.
+   - **READY, `--auto` flag or `autonomy: auto`** — set `Approval` to `skipped (--auto)` and invoke `/create-plan --auto` immediately. The plan has its own gate.
+   - **`suggest`** — write the PRD and stop.
 
 ## Output
 
 ```markdown
 # PRD: {Name}
 
-**Source**: `{task file}` · **Type**: {feature/bugfix/refactor} · **Status**: {READY / BLOCKED} · **Date**: {YYYY-MM-DD}
+**Source**: `{the reference as given — path, URL, tracker id, or "conversation"}` · **Type**: {feature/bugfix/refactor} · **Status**: {READY / BLOCKED} · **Approval**: {pending / YYYY-MM-DD / skipped (--auto)} · **Standards**: {owasp-top10-2025, …} · **Date**: {YYYY-MM-DD}
 
 ## 1. Overview
 {One paragraph: what this is and why it matters now.}
@@ -92,7 +100,9 @@ Runs before `/plan`.
 
 **Dependencies**: {External services, other teams, other features this waits on — or "None".}
 
-## 12. Security (OWASP Top 10:2025)
+## 12. Security & Compliance
+
+### OWASP Top 10:2025
 
 | # | Category | Applies? | Requirement | How it's tested |
 |---|---|---|---|---|
@@ -106,6 +116,11 @@ Runs before `/plan`.
 | A08 | Software or Data Integrity Failures | | | |
 | A09 | Security Logging and Alerting Failures | | | |
 | A10 | Mishandling of Exceptional Conditions | | | |
+
+### {Additional standard — name, version, source}
+| # | Control | Applies? | Requirement | How it's tested |
+|---|---|---|---|---|
+{One table per standard beyond the default. Rows are its controls as resolved per CLAUDE.md § Standards. Omit this block when there are none.}
 
 **Existing controls at risk**: {controls this change could weaken, or "None identified"}
 **Secrets / PII touched**: {what data, where it flows, how it's stored — or "None"}
@@ -146,12 +161,13 @@ Runs before `/plan`.
 
 ## Rules
 
-- Explaining *how* to build it means you've drifted into `/plan`.
+- Explaining *how* to build it means you've drifted into `/create-plan`.
 - Every functional requirement has an ID, a priority, and acceptance criteria. A requirement nobody can verify isn't a requirement.
 - Every requirement traces to a user story or goal; every goal has a metric.
 - A convention without a `file:line` is either unsourced or PROPOSED. Say which.
-- Anything from your head, not the task file, goes in the assumptions table.
-- Every OWASP row gets an answer. "Applies: no" is an answer; a blank cell is not.
+- Anything from your head, not the source, goes in the assumptions table.
+- Every row of every standard in scope gets an answer. "Applies: no" is an answer; a blank cell is not. A standard you couldn't resolve goes in Open Questions.
 - A security requirement with no test in the same row is incomplete.
-- Open questions remaining means Status is BLOCKED. Don't hand it to `/plan`.
+- Open questions remaining means Status is BLOCKED. Don't plan against it.
+- A READY PRD waits for a person before planning. `--auto` skips the wait, never the BLOCKED check.
 - If the task is really several products or features, or the codebase contradicts it, say so before writing.
