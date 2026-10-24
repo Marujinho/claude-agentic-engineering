@@ -34,7 +34,7 @@ Runs before `/create-plan`.
 
    Check the code around it too, not just the new code — a feature can be written correctly and still break an existing control by widening a query, reusing a permissive handler, or logging a field that wasn't logged before.
 
-6. **Ask, once.** Batch every question whose wrong answer means rework. Give 2–3 options with a recommendation. Everything else becomes a listed assumption — never a silent one.
+6. **Ask, once.** Batch every question whose wrong answer means rework. Give 2–3 options with a recommendation. Everything else becomes a listed assumption — never a silent one. `--auto` doesn't change this: a blocking question still means BLOCKED and the run stops. Only the PRD approval is skipped, never the questions.
 
 7. **Write the PRD** in the `artifacts` directory (CLAUDE.md § Pipeline settings), named for the feature itself in kebab-case — `user-invite-flow-prd.md`, not `task-prd.md` or `notes-final-v2-prd.md`. The name should tell someone what's inside without opening it.
 
