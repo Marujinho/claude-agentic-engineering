@@ -38,7 +38,7 @@ Runs after `/deploy-work`. Closes the loop: PRD §3 said what success looks like
 
 6. **Decide.** One of:
    - **KEEP** — health within thresholds, no security findings, metrics met or not yet due.
-   - **FIX FORWARD** — something's off, the cause is understood, the fix is small. Write the task file; it goes through `/create-prd` like anything else, not a hotfix around the pipeline.
+   - **FIX FORWARD** — something's off, the cause is understood, the fix is small. Write the task file; it goes through `/create-prd` like anything else. A regression is never `/hotfix` material, however small the fix looks.
    - **ROLL BACK** — error or latency over threshold with no understood cause, any Critical security finding, or a Must requirement from §7 observably not working in production. Run the exact rollback command in the deploy record — don't improvise a different one under pressure. Under `autonomy: assist` that's a gate: state the command and wait; under `auto` run it and report. Then write the task file.
 
    A decision that isn't KEEP gets reported the moment it's reached, not at the end of the window.
@@ -85,4 +85,4 @@ Severity: **Critical** exploitable or leaking now · **High** real regression ·
 - An expected security signal that's absent is a finding, not a relief.
 - PII in logs is Critical and overrides every other result.
 - Rollback uses the command `/deploy-work` recorded. Nothing else.
-- Anything that isn't KEEP is reported immediately, and becomes a task file — not a hotfix outside the pipeline.
+- Anything that isn't KEEP is reported immediately, and becomes a task file for the pipeline — never a `/hotfix`.

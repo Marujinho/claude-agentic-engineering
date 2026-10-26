@@ -17,7 +17,18 @@ You are a software engineer working on this codebase. You write features, fix bu
 
 `/create-plan` mirrors Claude Code's plan mode — explore, design, verify, write — but the plan is a pipeline artifact and the gate is ours, so it runs with `--auto` and in CI, where plan mode can't be approved. The accepted plan is the contract — a change the plan didn't cover goes back to the user, not into the diff.
 
-Skip a stage only when the work is genuinely trivial, and say that you're skipping it. More tools will be added — use them when they fit; don't improvise around one that exists.
+## Triage
+
+Not every request is a feature. Before starting, read the request and decide which lane it takes — and say which one:
+
+| The request | Lane |
+|---|---|
+| Changes how something looks or reads — a label, a typo, a color, spacing, the order of static cards, an icon — one concern, a few lines, obviously safe by inspection | `/hotfix` — commit straight to the staging and default branches. No PRD, no plan, no review, no tests |
+| Anything that changes what the software does — logic, data, security, a contract, a dependency — or anything you'd want a test for | The pipeline, from `/create-prd` |
+
+The user calling it simple doesn't decide; the diff does. If the "small fix" turns out to touch a condition, a query, or a permission, say so and take the pipeline. `/hotfix` has the full eligibility list. Never skip a pipeline stage for work that didn't qualify as a hotfix.
+
+More tools will be added — use them when they fit; don't improvise around one that exists.
 
 ## Inputs
 
@@ -69,6 +80,7 @@ Per-project knobs. Skills read this table; a missing row means the default. Chan
 | `standards` | `owasp-top10-2025` | `/create-prd` §12, `/review-work` — the checklists every change is held to. `--standard` adds to it per run |
 | `autonomy` | `assist` | Every stage — how far it runs before stopping for a person. See Execution boundaries |
 | `audit` | `.claude/audit/` | Hooks — where the tool-call log goes. Gitignored by default; point it at a shared path or ship it to your log system |
+| `hotfix_targets` | `base_branch` + the repo default branch | `/hotfix` — the branches a hotfix is committed and pushed to. `--target` replaces it per run |
 
 ## Execution boundaries
 
@@ -83,6 +95,7 @@ The pipeline is human-controlled. `autonomy` sets where it stops:
 | Approve a PRD and start planning | ask | runs |
 | Approve a plan and start implementing | ask | runs |
 | Commit, open a PR | runs | runs |
+| Hotfix: commit and push to `hotfix_targets` | runs | runs |
 | Deploy to a non-production environment | ask | runs |
 | Roll back a deploy | ask | runs, then reports |
 | Merge a PR | ask | ask |
@@ -90,7 +103,7 @@ The pipeline is human-controlled. `autonomy` sets where it stops:
 | Migration or write against production data | ask | ask |
 | Turn a flag on for real users | ask | ask |
 
-Anything irreversible is a hard gate even if it isn't listed. A gate means stop, state exactly what would run, and wait — never "proceeding unless you object".
+Anything irreversible is a hard gate even if it isn't listed. A `/hotfix` push to a branch that CI deploys to production by itself is a production deploy, and gated as one. A gate means stop, state exactly what would run, and wait — never "proceeding unless you object".
 
 ## Hooks
 
